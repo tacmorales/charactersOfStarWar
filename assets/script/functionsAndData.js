@@ -7,49 +7,48 @@ export let template = document.querySelector("#characterCard");
 export function* counter(from, until) {
     let i = from;
     for (i; i <= until; i++) {
-      yield i;
+        yield i;
     }
-    return "end"
-  }
+    return "end";
+}
 
-//Sections que luego se le asigna a cada section un contador que va desde firstId (from), hasta lastId (until) 
+//Sections que luego se le asigna a cada section un contador que va desde firstId (from), hasta lastId (until)
 export let sections = {
-  "first-group": {
-    firstId: 1,
-    lastId: 5,
-    
-  },
-  "second-group": {
-    firstId: 6,
-    lastId: 10,
-  },
-  "third-group": {
-    firstId: 11,
-    lastId: 15,
-  },
-  "fourth-group": {
-    firstId: 16,
-    lastId: 20,
-  },
+    "first-group": {
+        firstId: 1,
+        lastId: 5,
+    },
+    "second-group": {
+        firstId: 6,
+        lastId: 10,
+    },
+    "third-group": {
+        firstId: 11,
+        lastId: 15,
+    },
+    "fourth-group": {
+        firstId: 16,
+        lastId: 20,
+    },
 };
 //Se guarda en cada grupo un contador que va desed su firstId hasta lastId
 for (let section in sections) {
-  sections[section].counter = counter(
-    sections[section].firstId,
-    sections[section].lastId
-  );
+    sections[section].counter = counter(
+        sections[section].firstId,
+        sections[section].lastId
+    );
 }
 
-export const animationFrames =       [
-  { opacity: "0" , transform: "scale(0)" },
-  { opacity: "1" , transform: "scale(1)" },
-]
+export const animationFrames = [
+    { opacity: "0", transform: "scale(0)" },
+    { opacity: "1", transform: "scale(1)" },
+];
 
 //Revisa si el documento ya cargo. Si cargó llama a la funcion "aFunction"
 export function ready(aFunction) {
-  if (document.readyState !== "loading") {
-    aFunction();
-  } else {
-    document.addEventListener("DOMContentLoaded", aFunction);
-  }
+    if (document.readyState !== "loading") {
+        aFunction();
+    } else {
+        document.addEventListener("DOMContentLoaded", aFunction);
+    }
 }

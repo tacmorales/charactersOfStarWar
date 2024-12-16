@@ -24,9 +24,9 @@ const show1Character = async (e) => {
     //Se recupera el valor que devolvió el contador.
     const characterId = count.value;
     //Obtiene un personaje a partir del id
-    const characterJsonFormat = get1Character(characterId);
+    const characterJsonFormat = await get1Character(characterId);
     //Se crea la tarjeta el personaje en la pantalla del id
-    const card = createElementCard(characterJsonFormat)
+    const card = createElementCard(characterJsonFormat, characterId)
     //Selecciona la fila donde se coloca el personaje y se captura el id de este grupo
     const row = e.target.parentNode;
     
@@ -51,9 +51,11 @@ const show1Character = async (e) => {
 };
 
 const get1Character = async (characterId) => {
+    let characterJsonFormat;
     try {
-        const answer = await fetch(`${urlBase}${characterId}`);
-        checkIfFetchAnswerIsOk(answer)
+        const endpointToConsult = `${urlBase}${characterId}`;
+        const answer = await fetch(endpointToConsult);
+        checkIfFetchAnswerIsOk(answer, characterId)
         //Se captura al personaje si no hay problema con la consulta fetch
         characterJsonFormat = await answer.json();
     } catch (error) {
@@ -63,11 +65,11 @@ const get1Character = async (characterId) => {
         characterJsonFormat = null;
     }
     finally {
-        return characterJsonFormat
+        return characterJsonFormat.result.properties;
     }
 }
 
-const checkIfFetchAnswerIsOk = (answer) => {
+const checkIfFetchAnswerIsOk = (answer, characterId) => {
     if (!answer?.ok) {
         throw new Error(
             `Al consultar el Id ${characterId} la respuesta devolvió el estado ${answer.status}`
@@ -75,7 +77,8 @@ const checkIfFetchAnswerIsOk = (answer) => {
     }
 }
 
-const createElementCard = (characterJsonFormat) => {
+const createElementCard = (characterJsonFormat, characterId) => {
+    console.log(`createElementCard() -> characterJsonFormat: ${characterJsonFormat}`)
     //Se hace una copia del template de "character card" o tarjeta de personaje
     const clone = template.content.cloneNode(true);
     //Se coloca el Id en el circulo
@@ -86,7 +89,7 @@ const createElementCard = (characterJsonFormat) => {
         let characterName = characterJsonFormat.name;
         let characterMeasurements = `Altura: ${
             characterJsonFormat.height
-        }cm Peso: ${characterJsonFormat.mass.replace(",", ".")}kg `;
+        }cm Peso: ${String(characterJsonFormat.mass).replace(",", ".")}kg `;
         //En el titulo el nombre del personaje y en el parrafo las medidas del personaje.
         clone.querySelector("h3").textContent = characterName;
         clone.querySelector("p").textContent = characterMeasurements;

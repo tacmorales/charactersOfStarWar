@@ -1,17 +1,23 @@
-export const urlBase = "https://swapi.dev/api/people/";
+//Desde esta URL base se hacen las peticiones, solo falta agregar el Id de un personaje para consultar
+export const urlBase = "https://swapi.tech/api/people/";
 
-export let template;
-if ("content" in document.createElement("template")) {
-  //Revisa si el navegador soporta la etiqueta template
-  template = document.querySelector("#characterCard");
-} else {
-  //el 96,4% de los navegadores actuales lo soportan, no aplicare retrocompatibilidad.
-}
+export let template = document.querySelector("#characterCard");
 
+//Contador que va desde from hasta until
+export function* counter(from, until) {
+    let i = from;
+    for (i; i <= until; i++) {
+      yield i;
+    }
+    return "end"
+  }
+
+//Sections que luego se le asigna a cada section un contador que va desde firstId (from), hasta lastId (until) 
 export let sections = {
   "first-group": {
     firstId: 1,
     lastId: 5,
+    
   },
   "second-group": {
     firstId: 6,
@@ -26,15 +32,7 @@ export let sections = {
     lastId: 20,
   },
 };
-
-export function* counter(from, until) {
-  let i = from;
-  for (i; i <= until; i++) {
-    yield i;
-  }
-  return "end"
-}
-
+//Se guarda en cada grupo un contador que va desed su firstId hasta lastId
 for (let section in sections) {
   sections[section].counter = counter(
     sections[section].firstId,
@@ -42,6 +40,12 @@ for (let section in sections) {
   );
 }
 
+export const animationFrames =       [
+  { opacity: "0" , transform: "scale(0)" },
+  { opacity: "1" , transform: "scale(1)" },
+]
+
+//Revisa si el documento ya cargo. Si cargó llama a la funcion "aFunction"
 export function ready(aFunction) {
   if (document.readyState !== "loading") {
     aFunction();
